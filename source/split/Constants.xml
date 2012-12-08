@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<constants>
+  <constant name="error_f3" value="&quot;Server has been shutdown&quot;"/>
+  <constant name="error_f2" value="&quot;Persons of the server is full.&quot;"/>
+  <constant name="error_f1" value="&quot;SdState Error!&quot;"/>
+  <constant name="fnf_freceive_error" value="11"/>
+  <constant name="fnf_fsend_error" value="10"/>
+  <constant name="fnf_freceiving" value="9"/>
+  <constant name="fnf_fwait" value="8"/>
+  <constant name="fnf_freceive_complete" value="7"/>
+  <constant name="fnf_fsend_complete" value="6"/>
+  <constant name="fnf_fsend_complete_one" value="5"/>
+  <constant name="fnf_freceive_start" value="4"/>
+  <constant name="fnf_fsending" value="3"/>
+  <constant name="fnf_fsend_start" value="2"/>
+  <constant name="fnf_server_shutdown" value="1"/>
+  <constant name="fnf_sdstate_error" value="0"/>
+</constants>

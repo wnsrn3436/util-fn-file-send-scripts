@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+  <resource name="fnf_init" type="RESOURCE"/>
+  <resource name="fnf_uninit" type="RESOURCE"/>
+  <resource name="fnf_socket_make" type="RESOURCE"/>
+  <resource name="fnf_socket_join" type="RESOURCE"/>
+  <resource name="fnf_close" type="RESOURCE"/>
+  <resource name="fnf_get_error_string" type="RESOURCE"/>
+  <resource name="fnf_fsend" type="RESOURCE"/>
+  <resource name="fnf_fcheck" type="RESOURCE"/>
+  <resource name="fnf_get_is_guest" type="RESOURCE"/>
+  <resource name="fnf_get_player_number" type="RESOURCE"/>
+  <resource name="fnf_set_player_accept_max" type="RESOURCE"/>
+  <resource name="fnf_get_fname" type="RESOURCE"/>
+  <resource name="fnf_get_fsize" type="RESOURCE"/>
+  <resource name="fnf_get_folder" type="RESOURCE"/>
+  <resource name="fnf_get_fmd5" type="RESOURCE"/>
+  <resource name="fnf_get_fplayer" type="RESOURCE"/>
+  <resource name="fnf_get_sending" type="RESOURCE"/>
+  <resource name="fnf_get_saving" type="RESOURCE"/>
+  <resource name="fnf_get_speed" type="RESOURCE"/>
+</resources>

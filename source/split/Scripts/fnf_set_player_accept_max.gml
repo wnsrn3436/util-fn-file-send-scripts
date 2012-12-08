@@ -1,0 +1,1 @@
+global._fnf_player_join_accept_max_=argument0
