@@ -1,9 +1,11 @@
 # FN File Send Scripts
 
-A set of GameMaker 8 scripts that lets a server send a file to every connected client. It splits the file into chunks over Faucet Networking sockets, sizes the chunks to how fast the receiver answers, and compares the MD5 at the end, resending from the start on a mismatch. File name, size, bytes so far, and speed can be read during a transfer, so a progress display is easy to draw.
+[한국어](README.ko.md)
+
+A set of GameMaker 8 scripts that lets a server send a file to every connected client. It splits the file into chunks over Faucet Networking sockets and adjusts the chunk size to how fast the receiver replies. Once everything has arrived, it compares the MD5 and resends from the start on a mismatch. During a transfer you can read the file name, size, amount sent so far, and speed to draw a progress display.
 
 <p>
-  <img src="docs/screenshots/screenshot-1.png" width="306" alt="Example">
+  <img src="docs/screenshots/screenshot-1.png" width="306" alt="Example screen">
 </p>
 
 
@@ -28,17 +30,17 @@ The arguments of `fnf_fsend` are the file to send, the folder the receiver saves
 | `fnf_fsend_error` | Server: the receiver's MD5 differed, resending |
 | `fnf_freceive_start`, `fnf_freceiving`, `fnf_freceive_complete` | Client: receiving started, in progress, done |
 | `fnf_freceive_error` | Client: the MD5 differed, the file was deleted |
-| `fnf_server_shutdown` | Client: the server went away |
+| `fnf_server_shutdown` | Client: the server disconnected |
 | `fnf_sdstate_error` | No socket |
 
-During a transfer, `fnf_get_fname`, `fnf_get_fsize`, `fnf_get_folder`, and `fnf_get_fmd5` give the file information, `fnf_get_sending` (server) and `fnf_get_saving` (client) give the bytes so far, and `fnf_get_speed` gives the chunk size. To finish, call `fnf_close` and then `fnf_uninit`. The arguments of every script are described in [docs/reference.md](docs/reference.md).
+During a transfer, `fnf_get_fname`, `fnf_get_fsize`, `fnf_get_folder`, and `fnf_get_fmd5` give the file information. `fnf_get_sending` (server) and `fnf_get_saving` (client) return the bytes so far, and `fnf_get_speed` returns the chunk size. To finish, call `fnf_close` and then `fnf_uninit`. The arguments of every script are described in [docs/reference.md](docs/reference.md).
 
-The example asks whether this computer is the server and, for a client, asks for an IP and connects on port 12345. Pressing space on the server sends `file.txt` to the `download\` folder of every client, and both sides show the file name, progress, speed, MD5, and state.
+When started, the example asks whether this computer is the server. On a client it asks for an IP and connects on port 12345. Pressing space on the server sends `file.txt` to the `download\` folder of every client, and both sides show the file name, progress, speed, MD5, and state.
 
 
 ## How it works
 
-**`fnf_fcheck` is a single state machine.** State 1 is idle, 2 sends the header, 3 sends a chunk, and 4 waits for the reply. The server serves connected clients one at a time, and when one has received everything it moves to the next and rewinds the buffer read position. The header carries the file name, size, target folder, and MD5.
+**The whole state machine is in `fnf_fcheck`.** State 1 is idle, 2 sends the header, 3 sends a chunk, and 4 waits for the reply. The server serves connected clients one at a time. When one has received everything, it moves to the next and rewinds the buffer read position. The header carries the file name, size, target folder, and MD5.
 
 ```gml
 case 2: 
@@ -58,14 +60,14 @@ case 2:
 }
 ```
 
-**Chunk size grows and shrinks with the replies.** A chunk starts at 10 bytes and grows by an increasing multiple of 100 on every reply. If a reply arrives later than the limit given to `fnf_fsend`, the size shrinks by the same amount and the increment resets. A maximum chunk size, if given, is never exceeded.
+**Chunk size grows and shrinks with the replies.** A chunk starts at 10 bytes and grows by an increasing multiple of 100 on every reply. If a reply arrives later than the limit given to `fnf_fsend`, the size shrinks by the same amount and the increment resets. If a maximum chunk size is given, the chunk never grows past it.
 
 ```gml
 if !global._fnf_speed_c_c_ or current_time-global._fnf_speed_c_<global._fnf_speed_c_c_{global._fnf_speed_+=100*global._fnf_speed_up_; global._fnf_speed_up_+=1}
 else{global._fnf_speed_=max(10, global._fnf_speed_-100*global._fnf_speed_up_); global._fnf_speed_up_=1}
 ```
 
-**The receiver checks the MD5.** A client collects chunks in a buffer, and once the size matches the header it writes the file and compares `md5_hash_file` from Hashes Dll with the MD5 in the header. It replies 1 on a match and 2 otherwise, and a server that gets 2 rewinds the read position and sends the file to the same client again.
+**The receiver checks the MD5.** A client collects chunks in a buffer, and once the size matches the value in the header it writes the file and compares it against the MD5 in the header using `md5_hash_file` from Hashes Dll. It replies 1 on a match and 2 otherwise. A server that gets 2 rewinds the read position and sends the file to the same client again.
 
 
 ## Files
